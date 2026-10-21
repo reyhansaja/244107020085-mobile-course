@@ -12,7 +12,8 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final announcements = ref.watch(announcementsProvider);
+    final announcements = ref.watch(filteredAnnouncementsProvider);
+    final query = ref.watch(searchQueryProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,6 +31,16 @@ class HomePage extends ConsumerWidget {
         children: [
           const _PushStatusCard(),
           const SizedBox(height: 8),
+          TextField(
+            onChanged: (value) =>
+                ref.read(searchQueryProvider.notifier).set(value),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Cari judul pengumuman',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 8),
           ...announcements.when(
             loading: () => const [Center(child: CircularProgressIndicator())],
             error: (error, _) => [
@@ -40,7 +51,14 @@ class HomePage extends ConsumerWidget {
               ),
             ],
             data: (items) => items.isEmpty
-                ? const [Text('Belum ada pengumuman.')]
+                ? [
+                    Text(
+                      query.trim().isEmpty
+                          ? 'Belum ada pengumuman.'
+                          : 'Tidak ada pengumuman yang cocok dengan '
+                                '"$query".',
+                    ),
+                  ]
                 : [
                     for (final item in items)
                       Card(
