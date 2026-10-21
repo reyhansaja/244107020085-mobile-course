@@ -124,9 +124,11 @@ grep -rnE "RepositoryImpl\(|TokenStore\(" lib/features/*/presentation
 
 ```
 flutter analyze                   -> No issues found!
-flutter test                      -> 12 tests passed
+flutter test                      -> 13 tests passed
 dart format --set-exit-if-changed -> bersih
 ```
+
+(Setelah fitur pencarian Minggu 9 ditambahkan, jumlah test menjadi 19.)
 
 Test domain murni (tanpa SQLite/Dio/Firebase):
 
